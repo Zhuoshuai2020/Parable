@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {separateOutput,buildModelMessages,workingMemory,transcript} from '../interview.mjs';
+import {separateOutput,buildModelMessages,workingMemory,transcript,DIAGNOSTIC_EXAMPLE} from '../interview.mjs';
 test('诊断保留在记录，不混入给受访者的正文',()=>{
  const raw='<!--PARABLE-DIAG {"active_thread":"传承"} -->\n您希望留下什么？';
  const result=separateOutput(raw);
@@ -12,7 +12,7 @@ test('诊断保留在记录，不混入给受访者的正文',()=>{
  assert.throws(()=>separateOutput('<!--PARABLE-DIAG {} -->'));
 });
 
-const session=()=>({title:'测试访谈',mode:'simulation',status:'active',createdAt:'2026-11-04T00:00:00Z',snapshot:{interviewer:{name:'采访者',persona:'采访人设',skills:'追问'},respondent:{name:'虚构人物',persona:'受访者私有人设',skills:'回答'}},messages:[{id:'q1',actor:'interviewer',at:'2026-11-04T00:00:01Z',...separateOutput('<!--PARABLE-DIAG {"active_thread":"诚信","unresolved_tensions":["待核"]} -->您的经历是什么？')},{id:'a1',actor:'respondent',at:'2026-11-04T00:00:02Z',content:'这是我的回答。'}]});
+const session=()=>({title:'测试访谈',mode:'simulation',status:'active',createdAt:'2026-11-04T00:00:00Z',snapshot:{interviewer:{name:'采访者',persona:'采访人设',skills:'追问'},respondent:{name:'虚构人物',persona:'受访者私有人设',skills:'回答'}},messages:[{id:'q1',actor:'interviewer',at:'2026-11-04T00:00:01Z',...separateOutput('<!--PARABLE-DIAG '+JSON.stringify({...DIAGNOSTIC_EXAMPLE,active_thread:'诚信',unresolved_tensions:['待核']})+' -->您的经历是什么？')},{id:'a1',actor:'respondent',at:'2026-11-04T00:00:02Z',content:'这是我的回答。'}]});
 test('本场工作记忆恢复且不泄露给模拟受访者',()=>{
  const s=JSON.parse(JSON.stringify(session()));
  const interviewer=buildModelMessages(s,'interviewer');

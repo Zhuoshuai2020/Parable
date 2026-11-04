@@ -25,8 +25,19 @@ async function revealReply(id){
  await Promise.allSettled(animations.map(animation=>animation.finished));
 }
 function notice(message=''){ $('#notice').textContent=message;$('#notice').hidden=!message; }
-async function api(url,method='GET',data){const response=await fetch('/api/'+url,{method,headers:{'Content-Type':'application/json'},body:data===undefined?undefined:JSON.stringify(data)});const result=await response.json();if(!response.ok)throw Error(result.error||'请求失败');return result;}
+async function api(url,method='GET',data){
+ let response;
+ try{response=await fetch('/api/'+url,{method,headers:{'Content-Type':'application/json'},body:data===undefined?undefined:JSON.stringify(data)});}catch{throw Error('无法连接访谈服务。请检查网络或服务是否已启动，已保存的记录仍然保留。');}
+ let result;try{result=await response.json();}catch{throw Error('访谈服务未返回完整响应，请稍后重试。');}
+ if(!response.ok)throw Error(result.error||'请求失败');return result;
+}
 const heading=(eyebrow,title,desc)=>`<div class="hero"><div><div class="eyebrow">${eyebrow}</div><h1>${title}</h1><p class="intro">${desc}</p></div></div>`;
+function runtimeInfo(){
+ const runtime=connection.runtime;
+ if(!runtime)return '<div class="note-card">当前页面尚未取得人设版本，请刷新后核对。</div>';
+ const agent=config.interviewer;
+ return `<section class="runtime-info" aria-label="采访者人设版本"><div class="panel-heading"><h3>采访者人设</h3><span class="pill">v${esc(agent.version||runtime.interviewerVersion)}${agent.isCustom?' · 自定义':''}</span></div><p>基于 v${esc(runtime.referenceVersion)} 修订 · 模型等待预算 ${esc(runtime.timeoutSeconds)} 秒</p><details><summary>查看本版修订说明</summary><p>${esc(runtime.revisionNotes)}</p><p class="caption">运行引擎 ${esc(runtime.version)}</p></details><p class="caption">新访谈默认采用精简人设；A–H 方法模块按需注入。自定义配置保留。保存仅影响新访谈，已有访谈继续使用原快照。</p></section>`;
+}
 const guide=()=>`<div class="support"><div class="guide"><div class="section-label">访谈说明</div><h2>从经营经历，<br>理解传承意愿。</h2><p>围绕亲身经历、判断依据与传承期待，逐步澄清重要议题。</p><ol><li>回到重要的经历</li><li>理解选择背后的原因</li><li>探索想留给下一代的东西</li></ol></div><div class="note-card"><strong>关于这场对话</strong>您可以跳过问题，也可以随时停下。AI 的理解可以被纠正，您的表达由您决定。</div></div>`;
 function renderInterview(){
  if(current)return renderSession();
@@ -58,7 +69,7 @@ async function step(){pending=true;renderSession();try{current=await api(`sessio
 async function autoLoop(){try{while(auto&&autoCount<autoLimit&&current.status==='active'){await step();autoCount++;} }finally{auto=false;if(page==='interview')renderSession();}}
 function renderSettings(){
  const isInterviewer=tab==='interviewer',agent=isInterviewer?config.interviewer:config.respondents.find(r=>r.id===tab)||config.respondents[0];
- $('#view').innerHTML=heading('AGENT CONFIGURATION','采访者与受访者配置','调整采访者的表达与方法，或为模拟受访者写下独立的人设。')+`<div class="tabs"><button class="secondary ${isInterviewer?'active':''}" id="tab-interviewer">采访者</button><button class="secondary ${!isInterviewer?'active':''}" id="tab-respondent">模拟受访者</button></div><div class="panel">${!isInterviewer?`<div class="toolbar"><select id="agent-select">${config.respondents.map(r=>`<option value="${esc(r.id)}" ${r.id===agent.id?'selected':''}>${esc(r.name)}</option>`).join('')}</select><button class="secondary" id="add-agent">新增人物</button></div>`:''}<label for="agent-name">Agent 名称</label><input id="agent-name" value="${esc(agent.name)}"><div class="editor-grid"><div><label for="persona">人设 / Persona</label><textarea id="persona" spellcheck="false">${esc(agent.persona)}</textarea></div><div><label for="skills">访谈方法 / Skills</label><textarea id="skills" spellcheck="false">${esc(agent.skills)}</textarea></div></div><div class="editor-foot"><button id="save-config" class="primary">保存配置 ↗</button><span class="caption">保存后用于新访谈；已开始的访谈保持原配置。</span></div></div><div class="api-help">采访者参考版本：v2.4.12。模型连接：${connection.configured?esc(connection.model):'尚未配置'}。API 地址、模型名称和密钥通过服务端环境变量设置。<br>记忆机制：本场完整问答 + 采访者历次诊断状态；暂停后可恢复。不读取其他场次，不具备长期记忆。<br>Skills 作为文本方法注入模型，不执行脚本。模拟人物不代表真人观点。</div>`;
+ $('#view').innerHTML=heading('AGENT CONFIGURATION','采访者与受访者配置','调整采访者的表达与方法，或为模拟受访者写下独立的人设。')+runtimeInfo()+`<div class="tabs"><button class="secondary ${isInterviewer?'active':''}" id="tab-interviewer">采访者</button><button class="secondary ${!isInterviewer?'active':''}" id="tab-respondent">模拟受访者</button></div><div class="panel">${!isInterviewer?`<div class="toolbar"><select id="agent-select">${config.respondents.map(r=>`<option value="${esc(r.id)}" ${r.id===agent.id?'selected':''}>${esc(r.name)}</option>`).join('')}</select><button class="secondary" id="add-agent">新增人物</button></div>`:''}<label for="agent-name">Agent 名称</label><input id="agent-name" value="${esc(agent.name)}"><div class="editor-grid"><div><label for="persona">人设 / Persona</label><textarea id="persona" spellcheck="false">${esc(agent.persona)}</textarea></div><div><label for="skills">访谈方法 / Skills</label><textarea id="skills" spellcheck="false">${esc(agent.skills)}</textarea></div></div><div class="editor-foot"><button id="save-config" class="primary">保存配置 ↗</button><span class="caption">保存后用于新访谈；已开始的访谈保持原配置。</span></div></div><div class="api-help">模型连接：${connection.configured?esc(connection.model):'尚未配置'}。API 地址、模型名称和密钥通过服务端环境变量设置。<br>记忆机制：本场完整问答 + 采访者历次诊断状态；暂停后可恢复。不读取其他场次，不具备长期记忆。<br>Skills 作为文本方法注入模型，不执行脚本。模拟人物不代表真人观点。</div>`;
  enterOnce('settings');
  const stash=()=>{agent.name=$('#agent-name').value;agent.persona=$('#persona').value;agent.skills=$('#skills').value;};
  $('#tab-interviewer').onclick=()=>{stash();tab='interviewer';renderSettings();};$('#tab-respondent').onclick=()=>{stash();tab=config.respondents[0].id;renderSettings();};

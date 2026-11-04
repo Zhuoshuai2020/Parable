@@ -68,3 +68,5 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 @keyframes quiet-breath{0%,100%{opacity:.2}50%{opacity:.85}}
 @media(max-width:650px){.message-body{padding-left:0}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}.thinking-dots i{opacity:.55}}
+
+.runtime-info{background:#fff;border:1px solid var(--line);border-left:3px solid #a58a57;padding:20px 24px;margin:0 0 22px}.runtime-info .panel-heading{margin-bottom:8px}.runtime-info p{font-size:12px;color:var(--muted);margin:8px 0}.runtime-info summary{font-size:13px;color:var(--ink);cursor:pointer;padding:8px 0}.runtime-info pre{white-space:pre-wrap;font-family:inherit;font-size:13px;line-height:1.9;margin:10px 0;padding:16px;background:var(--bg)}

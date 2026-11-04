@@ -6,11 +6,12 @@ import {mkdtemp,rm} from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import {once} from 'node:events';
+import {DIAGNOSTIC_EXAMPLE} from '../interview.mjs';
 
 test('访谈完整流程、配置隔离、失败重试和持久化',{timeout:30000},async()=>{
  const directory=await mkdtemp(path.join(os.tmpdir(),'parable-test-'));
  const calls=[];let fail=false,truncated=false,child;
- const mock=http.createServer(async(req,res)=>{let raw='';for await(const chunk of req)raw+=chunk;calls.push(JSON.parse(raw));res.writeHead(fail?503:200,{'Content-Type':'application/json'});const diag=calls.at(-1).messages[0].content.includes('INTERVIEWER-SECRET')?'<!--PARABLE-DIAG {"active_thread":"传承"} -->':'';res.end(JSON.stringify({choices:[{finish_reason:truncated?'length':'stop',message:{content:diag+'测试生成的第 '+calls.length+' 条发言'}}]}));});
+ const mock=http.createServer(async(req,res)=>{let raw='';for await(const chunk of req)raw+=chunk;calls.push(JSON.parse(raw));res.writeHead(fail?503:200,{'Content-Type':'application/json'});const diag=!calls.at(-1).messages[0].content.includes('RESPONDENT-SECRET')?'<!--PARABLE-DIAG '+JSON.stringify({...DIAGNOSTIC_EXAMPLE,active_thread:'传承'})+' -->':'';res.end(JSON.stringify({choices:[{finish_reason:truncated?'length':'stop',message:{content:diag+'测试生成的第 '+calls.length+' 条发言'}}]}));});
  mock.listen(0,'127.0.0.1');await once(mock,'listening');
  async function start(extra={}){child=spawn(process.execPath,['--no-warnings','server.mjs'],{env:{...process.env,PORT:'0',PARABLE_DATA_DIR:directory,PARABLE_API_BASE:`http://127.0.0.1:${mock.address().port}/v1`,PARABLE_MODEL:'test-model',PARABLE_API_KEY:'test-private-key',...extra},stdio:['ignore','pipe','pipe']});const [chunk]=await once(child.stdout,'data');return String(chunk).match(/http:\/\/127\.0\.0\.1:\d+/)[0];}
  async function stop(){const p=once(child,'exit');child.kill();await p;child=null;}
@@ -29,8 +30,8 @@ test('访谈完整流程、配置隔离、失败重试和持久化',{timeout:300
   config.interviewer.persona='NEW-PERSONA';await request('config','PUT',config);
   result=await request(`sessions/${sim.id}/step`,'POST');assert.equal(result.body.snapshot.interviewer.persona,'INTERVIEWER-SECRET');
   assert.match(calls[2].messages[1].content,/PARABLE-DIAG/);assert.equal(result.body.memory.diagnostic.active_thread,'传承');
-  truncated=true;assert.equal((await request(`sessions/${sim.id}/step`,'POST')).status,400);assert.equal((await request('sessions/'+sim.id)).body.messages.length,3);truncated=false;
-  fail=true;result=await request(`sessions/${sim.id}/step`,'POST');assert.equal(result.status,400);assert.equal((await request('sessions/'+sim.id)).body.messages.length,3);
+  truncated=true;assert.equal((await request(`sessions/${sim.id}/step`,'POST')).status,502);assert.equal((await request('sessions/'+sim.id)).body.messages.length,3);truncated=false;
+  fail=true;result=await request(`sessions/${sim.id}/step`,'POST');assert.equal(result.status,502);assert.equal((await request('sessions/'+sim.id)).body.messages.length,3);
   fail=false;assert.equal((await request(`sessions/${sim.id}/step`,'POST')).body.messages.length,4);
   const human=(await request('sessions','POST',{mode:'human'})).body;
   await request(`sessions/${human.id}/step`,'POST');

@@ -1,0 +1,18 @@
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Logs and operating system files
+*.log
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Private interview records and local dependencies
+data/
+node_modules/
+coverage/
+
+# Original reference archive; the active configuration is tracked separately
+/interviewer-v2.4.12-2026-11-03.zip

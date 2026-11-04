@@ -28,3 +28,6 @@ coverage/
 # Python evaluation caches
 __pycache__/
 *.py[cod]
+
+# Historical UI screenshots are retained in local archives
+/docs/acceptance/*.png

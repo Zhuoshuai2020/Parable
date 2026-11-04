@@ -47,3 +47,5 @@ npm start
 访问无需登录 ChatGPT、Codex 或 GitHub；浏览器 HttpOnly Cookie 使用 256 位随机值，服务端只使用其哈希作为数据归属。默认每日全站最多 200 次生成尝试（北京时间零点重置），可通过 PARABLE_DAILY_LIMIT 调整；达到上限仍可回看和导出。D1 迁移通过 Sites 发布流程应用，不在请求处理时建表。
 
 本目录是主 Git 仓库直接跟踪的网站源码，来源为 `sites/parable-online/` 的本地提交 `4c9fde63a42d4dd03e8cfd31e165bbee32626254`；不是嵌套 Git 仓库。来源校验清单见 `source-snapshot.json`。主项目的 Node 服务与本目录的 Workers 服务分别运行；共享逻辑需要有选择地同步并分别验证，不能整目录覆盖。
+
+已省略当前业务未引用的通用 UI 组件、配套素材及 D1 示例。来源清单的 `omittedFromHandoff` 记录这些路径，开发不依赖它们；运行和发布需要的集成仍保留。

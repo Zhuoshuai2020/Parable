@@ -1,5 +1,5 @@
 import {isSlimAgent,SLIM_VERSION} from './slim-interviewer.mjs';
-import profile from './config/interviewer-profile.json' with {type:'json'};
+import profile from '../../config/interviewer-profile.json' with {type:'json'};
 export const INTERVIEWER_PROFILE_VERSION=profile.version;
 export const INTERVIEWER_REFERENCE_VERSION=profile.referenceVersion;
 export const INTERVIEWER_REVISION_NOTES=profile.revisionNotes;

@@ -1,4 +1,4 @@
-import profile from './config/slim-interviewer.json' with {type:'json'};
+import profile from '../../config/slim-interviewer.json' with {type:'json'};
 
 export const SLIM_VERSION=profile.version;
 export const slimAgent={name:'Parable 采访者',persona:profile.persona,skills:'',version:SLIM_VERSION,referenceVersion:'2.4.14',isCustom:false};

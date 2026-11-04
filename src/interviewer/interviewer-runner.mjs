@@ -1,5 +1,5 @@
 import {completeInterviewReply,isValidDiagnostic,diagnosticContract} from './interview.mjs';
-import {MODEL_REQUEST_TIMEOUT_MS} from './model-client.mjs';
+import {MODEL_REQUEST_TIMEOUT_MS} from '../model-client.mjs';
 import {isSlimAgent,selectSlimModules} from './slim-interviewer.mjs';
 
 function parsePlan(raw){

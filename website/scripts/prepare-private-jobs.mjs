@@ -1,5 +1,5 @@
 import {writeFile,access,copyFile} from 'node:fs/promises';
-import {loadJobs} from '../../jobs-respondent.mjs';
+import {loadJobs} from '../../src/jobs/jobs-respondent.mjs';
 
 const target=new URL('../config/jobs-private.json',import.meta.url);
 if(process.argv.includes('--from-local')){

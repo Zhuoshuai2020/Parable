@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {separateOutput,buildModelMessages,workingMemory,transcript,DIAGNOSTIC_EXAMPLE} from '../interview.mjs';
+import {separateOutput,buildModelMessages,workingMemory,transcript,DIAGNOSTIC_EXAMPLE} from '../src/interviewer/interview.mjs';
 test('诊断保留在记录，不混入给受访者的正文',()=>{
  const raw='<!--PARABLE-DIAG {"active_thread":"传承"} -->\n您希望留下什么？';
  const result=separateOutput(raw);

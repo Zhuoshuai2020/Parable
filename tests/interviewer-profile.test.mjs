@@ -1,8 +1,8 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import profile from '../config/interviewer-profile.json' with {type:'json'};
-import {resolveInterviewerAgent} from '../interviewer-profile.mjs';
-import {buildModelMessages} from '../interview.mjs';
+import {resolveInterviewerAgent} from '../src/interviewer/interviewer-profile.mjs';
+import {buildModelMessages} from '../src/interviewer/interview.mjs';
 test('v2.4.14沿用原章节顺序，保留诊断字段契约',()=>{
  const headings=s=>s.split('\n').filter(line=>line.startsWith('## '));assert.deepEqual(headings(profile.persona),headings(profile.referencePersona));
  const diag=s=>s.match(/<!--PARABLE-DIAG (\{.*?\}) -->/)[1];

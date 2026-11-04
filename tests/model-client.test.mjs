@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {requestModel} from '../model-client.mjs';
+import {requestModel} from '../src/model-client.mjs';
 const input={baseUrl:'https://gateway.example/v1',apiKey:'private-test-credential',model:'test',messages:[{role:'user',content:'private-test-interview'}]};
 const ok=()=>Response.json({choices:[{message:{content:'有效回复'},finish_reason:'stop'}]});
 test('连接中断只重试一次，日志不包含密钥或访谈',async()=>{

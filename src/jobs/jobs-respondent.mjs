@@ -3,7 +3,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {JOBS_DEFAULT_SKILLS} from './jobs-style.mjs';
 
-const defaultRoot=fileURLToPath(new URL('./data/jobs',import.meta.url));
+const defaultRoot=fileURLToPath(new URL('../../data/jobs',import.meta.url));
 export async function loadJobs(root=process.env.PARABLE_JOBS_DIR||defaultRoot){
   const version='0.7.0',directory=path.join(root,version);
   let system;

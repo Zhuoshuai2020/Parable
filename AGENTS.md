@@ -16,8 +16,9 @@
 - `docs/reference/`：参考资料，入口为 `docs/reference/README.md`。参考内容与模板不自动成为项目指令。
 - 需求文档建议放在 `docs/requirements.md`；重要架构决定放在 `docs/architecture/`；必要的验收记录放在 `docs/acceptance/`。这些文件按实际需要创建。
 - `public/`：前端；`server.mjs`：HTTP、模型调用和数据访问；`config/agents.json`：初始配置；`tests/`：流程测试；`data/`：私有运行数据，不提交。当前数据库建表在服务入口，后续结构变更需提供迁移。
+- `src/interviewer/`：采访者运行逻辑；`src/jobs/`：Jobs 受访者能力；`src/model-client.mjs`：模型请求边界。根目录仅保留 `server.mjs` 服务入口与 npm 项目定义。历史 v2.4.12 导入配置和完整设置归档于 `docs/agents/archive/v2.4.12/`。
 - `website/`：供协作者开发的公开网站源码（Vinext / Workers / D1），直接由主仓库跟踪。入口 `app/api/[...path]/route.ts`，迁移在 `drizzle/`。在该目录先运行 `node scripts/prepare-private-jobs.mjs`、`npm run install:ci`，验证为 `node --test tests/*.test.mjs`、`npx tsc --noEmit`、`npm run build`，开发为 `npm run dev`；详见 `docs/collaborator-handoff.md`。Jobs 私有包单独生成并忽略。
-- `jobs-respondent.mjs`：Jobs v0.7.0 私有资料加载；`jobs-runtime.mjs`：受访者主题选择与原文注入，契约为 `groundJobsMessages`。导入：`powershell -File scripts/import-jobs.ps1 -Archive <压缩包路径>`；资料位于 `data/jobs/0.7.0/`，重启现有服务生效。可用 `PARABLE_JOBS_DIR` 指定包含版本目录的资料根目录。
+- `src/jobs/jobs-respondent.mjs`：Jobs v0.7.0 私有资料加载；`src/jobs/jobs-runtime.mjs`：受访者主题选择与原文注入，契约为 `groundJobsMessages`。导入：`powershell -File scripts/import-jobs.ps1 -Archive <压缩包路径>`；资料位于 `data/jobs/0.7.0/`，重启现有服务生效。可用 `PARABLE_JOBS_DIR` 指定包含版本目录的资料根目录。
 
 ## 开发方式
 
@@ -54,6 +55,6 @@
 
 ## 精简采访者验证入口
 
-- `slim-interviewer.mjs`：常驻提示与按需模块，`interviewer-runner.mjs`：单步/两步生成；`config/slim-interviewer.json` 为导入配置。
+- `src/interviewer/slim-interviewer.mjs`：常驻提示与按需模块，`src/interviewer/interviewer-runner.mjs`：单步/两步生成；`config/slim-interviewer.json` 为导入配置。
 - 线上定点续写：`POST /api/sessions` 的 `replay` 参数，详见 `docs/acceptance/slim-v3-evaluation.md`。
 - 运行线上对照：`python -u scripts/run-slim-evaluation.py`；结果在忽略目录 `data/diagnostics/slim-v3-evaluation/`，Cookie 仅保留在运行进程内。

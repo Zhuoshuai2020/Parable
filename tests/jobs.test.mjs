@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mergeJobs,groundJobsMessages} from '../jobs-runtime.mjs';
-import {buildModelMessages} from '../interview.mjs';
-import {JOBS_LEGACY_SKILLS,JOBS_DEFAULT_SKILLS} from '../jobs-style.mjs';
+import {mergeJobs,groundJobsMessages} from '../src/jobs/jobs-runtime.mjs';
+import {buildModelMessages} from '../src/interviewer/interview.mjs';
+import {JOBS_LEGACY_SKILLS,JOBS_DEFAULT_SKILLS} from '../src/jobs/jobs-style.mjs';
 
 const jobs={agent:{id:'jobs-demo1',name:'Jobs',version:'0.7.0',knowledge:{type:'jobs-local',version:'0.7.0'},persona:'PRIVATE JOBS',skills:'read'},files:new Map([
  ['knowledge/topic-index.md','主题索引'],['knowledge/topic-family.md','[原文](../raw/family.md)，行 2–3'],['raw/family.md','标题\nPRIVATE SOURCE\n家庭材料\n上下文']

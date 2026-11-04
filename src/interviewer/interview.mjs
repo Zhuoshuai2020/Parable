@@ -1,5 +1,5 @@
 import {isSlimAgent,slimModuleText} from './slim-interviewer.mjs';
-import {MODEL_REQUEST_TIMEOUT_MS} from './model-client.mjs';
+import {MODEL_REQUEST_TIMEOUT_MS} from '../model-client.mjs';
 import {resolveInterviewerAgent} from './interviewer-profile.mjs';
 // Keep the reference agent's backstage diagnostics out of the spoken conversation.
 export function separateOutput(raw){

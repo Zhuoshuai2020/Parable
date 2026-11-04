@@ -6,7 +6,7 @@ import {mkdtemp,rm} from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import {once} from 'node:events';
-import {DIAGNOSTIC_EXAMPLE} from '../interview.mjs';
+import {DIAGNOSTIC_EXAMPLE} from '../src/interviewer/interview.mjs';
 
 test('访谈完整流程、配置隔离、失败重试和持久化',{timeout:30000},async()=>{
  const directory=await mkdtemp(path.join(os.tmpdir(),'parable-test-'));

@@ -1,9 +1,9 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {slimAgent,selectSlimModules,defaultInterviewer} from '../slim-interviewer.mjs';
-import {resolveInterviewerAgent} from '../interviewer-profile.mjs';
-import {buildModelMessages,DIAGNOSTIC_EXAMPLE} from '../interview.mjs';
-import {runInterviewer} from '../interviewer-runner.mjs';
+import {slimAgent,selectSlimModules,defaultInterviewer} from '../src/interviewer/slim-interviewer.mjs';
+import {resolveInterviewerAgent} from '../src/interviewer/interviewer-profile.mjs';
+import {buildModelMessages,DIAGNOSTIC_EXAMPLE} from '../src/interviewer/interview.mjs';
+import {runInterviewer} from '../src/interviewer/interviewer-runner.mjs';
 const session=(answers=[],mode='single')=>({snapshot:{interviewer:slimAgent,interviewMode:mode},messages:answers.map(content=>({actor:'respondent',content}))});
 const diag='<!--PARABLE-DIAG '+JSON.stringify({...DIAGNOSTIC_EXAMPLE,next_action:'成因、传承两个方向，选择成因'})+' -->';
 

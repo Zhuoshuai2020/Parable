@@ -3,6 +3,7 @@
 ## 源码入口
 
 - 根目录：本机单用户 Node.js / SQLite MVP，启动和验证见根 README。
+- 本地运行模块位于 `src/interviewer/`、`src/jobs/` 和 `src/model-client.mjs`；当前 JSON 配置在 `config/`。根目录只保留 HTTP 入口与 npm 项目定义，历史导入 JSON 及完整设置说明在 `docs/agents/archive/v2.4.12/`。
 - `website/`：公开网站的 Vinext / Cloudflare Workers 源码，包含界面、API、访客权限、模型调用、人物配置、锁文件、D1 迁移、测试与 Sites 构建集成。开发命令见该目录 README。
 - `docs/agents/`、`docs/architecture/`、`docs/acceptance/`：人设参考、架构与历史验收材料。历史验收记录不自动证明当前版本已通过线上验收。
 - `sites/parable-online/`、`sites/jobs-style-online/`、`sites/jobs-style-publish/`：原有的本地独立工作目录，保持忽略。协作者应开发 `website/`，不依赖这些目录或导出 ZIP。

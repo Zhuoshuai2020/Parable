@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {completeInterviewReply,DIAGNOSTIC_EXAMPLE,isValidDiagnostic,workingMemory,buildModelMessages} from '../interview.mjs';
-import {MODEL_REQUEST_TIMEOUT_MS} from '../model-client.mjs';
+import {completeInterviewReply,DIAGNOSTIC_EXAMPLE,isValidDiagnostic,workingMemory,buildModelMessages} from '../src/interviewer/interview.mjs';
+import {MODEL_REQUEST_TIMEOUT_MS} from '../src/model-client.mjs';
 const diagnostic={...DIAGNOSTIC_EXAMPLE,active_thread:'信任',new_evidence:['受访者提到拖欠货款'],next_action:'追问当时的判断'};
 const valid='<!--PARABLE-DIAG '+JSON.stringify(diagnostic)+' -->原正文';
 test('采访者缺少自诊断时最多修复一次，保留原正文与真实原始响应',async()=>{

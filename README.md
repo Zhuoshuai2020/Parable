@@ -46,7 +46,7 @@ npm start
 
 Jobs v0.7.0 接入：运行 `powershell -File scripts/import-jobs.ps1 -Archive <jobs-private-portable-v0.7.0.zip 的完整路径>`，然后重启 `npm start`。在“模拟访谈”中选择“乔布斯 · Jobs（历史人物模拟）”。已有同版本资料不会覆盖。私有资料保存在忽略的 `data/jobs/0.7.0/`；可通过 `PARABLE_JOBS_DIR` 更换资料根目录。
 
-Jobs 默认表达方法位于 `jobs-style.mjs`（`0.7.0-style.1`），在 Agent 设置的 Skills 中可以编辑。未自定义的旧默认方法在新访谈配置中升级，自定义内容与已有快照保留。每轮额外读取真实访谈片段作语气参照；表达调整说明见 `docs/acceptance/jobs-expression.md`。
+Jobs 默认表达方法位于 `src/jobs/jobs-style.mjs`（`0.7.0-style.1`），在 Agent 设置的 Skills 中可以编辑。未自定义的旧默认方法在新访谈配置中升级，自定义内容与已有快照保留。每轮额外读取真实访谈片段作语气参照；表达调整说明见 `docs/acceptance/jobs-expression.md`。
 
 每轮 Jobs 回答先调用模型选择至多三个主题，再由服务端读取主题所引用的原文段落，随后独立生成回答；这两次请求共享 180 秒预算。JSON 记录保存资料版本及本轮读取文件名，采访者只看到对话。没有复刻原包的交互式 `read_document`、`record_judgment` 工具，当前采用主题导航与引用段落预读取。模型生成质量需另行验收；模拟输出不代表乔布斯本人。线上适配使用服务端资料模块，原文不作为公开静态资源发布。
 
@@ -61,5 +61,22 @@ npm test
 精简采访者 v3 与线上定点续写对照：见 [运行与验证说明](docs/acceptance/slim-v3-evaluation.md)。命令：`python -u scripts/run-slim-evaluation.py`。
 
 本地提交、分支和资料边界见 [Git 管理约定](docs/git-workflow.md)。
+
+## 目录
+
+```text
+server.mjs          本地 HTTP 服务入口
+src/interviewer/    采访者配置解析、上下文、诊断与生成
+src/jobs/           Jobs 资料加载、检索与表达
+src/model-client.mjs 模型 API 客户端
+config/             当前运行配置（JSON）
+public/             本地应用界面
+tests/              本地应用测试
+scripts/            导入与评估脚本
+website/            独立运行的网站源码
+docs/               需求、架构、验收与参考资料
+```
+
+原始采访者 v2.4.12 导入 JSON 与完整设置说明归档于 `docs/agents/archive/v2.4.12/`，用于追溯，不是当前运行入口。根目录 `package.json` 保留 npm 启动与测试定义。
 
 公开网站的完整非私有开发源码位于 [website/](website/README.md)，协作开发前请阅读 [开发交接说明](docs/collaborator-handoff.md)。

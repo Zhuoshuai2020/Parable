@@ -1,15 +1,15 @@
-import {defaultInterviewer,SLIM_VERSION} from './slim-interviewer.mjs';
-import {runInterviewer} from './interviewer-runner.mjs';
+import {defaultInterviewer,SLIM_VERSION} from './src/interviewer/slim-interviewer.mjs';
+import {runInterviewer} from './src/interviewer/interviewer-runner.mjs';
 import http from 'node:http';
 import {readFile, mkdir} from 'node:fs/promises';
 import {DatabaseSync} from 'node:sqlite';
 import {randomUUID} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
-import {completeInterviewReply,buildModelMessages,workingMemory,transcript,RUNTIME_VERSION} from './interview.mjs';
-import {resolveInterviewerAgent,INTERVIEWER_PROFILE_VERSION,INTERVIEWER_REFERENCE_VERSION,INTERVIEWER_REVISION_NOTES} from './interviewer-profile.mjs';
-import {requestModel,MODEL_REQUEST_TIMEOUT_MS} from './model-client.mjs';
-import {loadJobs,mergeJobs,groundJobsMessages} from './jobs-respondent.mjs';
+import {completeInterviewReply,buildModelMessages,workingMemory,transcript,RUNTIME_VERSION} from './src/interviewer/interview.mjs';
+import {resolveInterviewerAgent,INTERVIEWER_PROFILE_VERSION,INTERVIEWER_REFERENCE_VERSION,INTERVIEWER_REVISION_NOTES} from './src/interviewer/interviewer-profile.mjs';
+import {requestModel,MODEL_REQUEST_TIMEOUT_MS} from './src/model-client.mjs';
+import {loadJobs,mergeJobs,groundJobsMessages} from './src/jobs/jobs-respondent.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const dataDir=process.env.PARABLE_DATA_DIR||path.join(root,'data');

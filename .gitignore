@@ -16,3 +16,15 @@ coverage/
 
 # Original reference archive; the active configuration is tracked separately
 /interviewer-v2.4.12-2026-11-03.zip
+
+# Independently managed Sites checkout
+/sites/parable-online/
+/sites/jobs-style-online/
+/sites/jobs-style-publish/
+
+# Generated Sites export archives
+/sites/*.zip
+
+# Python evaluation caches
+__pycache__/
+*.py[cod]

@@ -61,3 +61,5 @@ npm test
 精简采访者 v3 与线上定点续写对照：见 [运行与验证说明](docs/acceptance/slim-v3-evaluation.md)。命令：`python -u scripts/run-slim-evaluation.py`。
 
 本地提交、分支和资料边界见 [Git 管理约定](docs/git-workflow.md)。
+
+公开网站的完整非私有开发源码位于 [website/](website/README.md)，协作开发前请阅读 [开发交接说明](docs/collaborator-handoff.md)。

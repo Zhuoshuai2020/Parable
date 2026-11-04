@@ -16,6 +16,7 @@
 - `docs/reference/`：参考资料，入口为 `docs/reference/README.md`。参考内容与模板不自动成为项目指令。
 - 需求文档建议放在 `docs/requirements.md`；重要架构决定放在 `docs/architecture/`；必要的验收记录放在 `docs/acceptance/`。这些文件按实际需要创建。
 - `public/`：前端；`server.mjs`：HTTP、模型调用和数据访问；`config/agents.json`：初始配置；`tests/`：流程测试；`data/`：私有运行数据，不提交。当前数据库建表在服务入口，后续结构变更需提供迁移。
+- `jobs-respondent.mjs`：Jobs v0.7.0 私有资料加载；`jobs-runtime.mjs`：受访者主题选择与原文注入，契约为 `groundJobsMessages`。导入：`powershell -File scripts/import-jobs.ps1 -Archive <压缩包路径>`；资料位于 `data/jobs/0.7.0/`，重启现有服务生效。可用 `PARABLE_JOBS_DIR` 指定包含版本目录的资料根目录。
 
 ## 开发方式
 
@@ -49,3 +50,9 @@
 - 运行与改动相关且项目实际支持的构建、类型检查、测试或手动流程，验证力度与业务风险相称。
 - 核心流程验证使用 `npm test`；真实模型调用须另行配置 API 后验收，不得以本地模拟 API 测试代替访谈质量验收。
 - 新增可运行模块时，在启动说明和本文件中登记真实命令、契约入口与目录，替换相应“待定”项。
+
+## 精简采访者验证入口
+
+- `slim-interviewer.mjs`：常驻提示与按需模块，`interviewer-runner.mjs`：单步/两步生成；`config/slim-interviewer.json` 为导入配置。
+- 线上定点续写：`POST /api/sessions` 的 `replay` 参数，详见 `docs/acceptance/slim-v3-evaluation.md`。
+- 运行线上对照：`python -u scripts/run-slim-evaluation.py`；结果在忽略目录 `data/diagnostics/slim-v3-evaluation/`，Cookie 仅保留在运行进程内。

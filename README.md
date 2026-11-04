@@ -27,7 +27,9 @@ npm start
 
 ## 采访者的记忆
 
-每次模型调用带上本场全部问答，并将采访者自己的历史诊断送回其上下文；这些状态随原始发言持久化，暂停或重启后可恢复。模拟受访者只看到公开问答，不接收采访者的人设和诊断。
+每次模型调用带上本场全部问答，并在调用前显式注入采访者最新的有效诊断；最近 40 版状态随原始发言持久化，暂停或重启后可恢复。模拟受访者只看到公开问答，不接收采访者的人设和诊断。
+
+采访者自诊断需要通过字段校验。缺失时最多进行一次格式修复，标记 `diagnosticStatus: repaired` 并保留原正文；直接合格时标记 `validated`。修复后仍不合格则明确报错，不保存成成功发言。受访者发言仍可以 `diagnostic: null`。旧记录不自动补造诊断。原 DSH 的调用链核对与恢复说明见 [DSH 检查记录](docs/architecture/dsh-restoration.md)。
 
 当前没有跨访谈长期记忆、向量检索或自动总结压缩。本地上下文上限为 180000 字符，达到上限时明确提示并保留记录，不静默丢弃早期提问。供应商实际 token 限制仍可能更早触发。检查细节见 [采访者检查记录](docs/architecture/interviewer-audit.md)。
 
@@ -42,6 +44,12 @@ npm start
 
 ## 验证
 
+Jobs v0.7.0 接入：运行 `powershell -File scripts/import-jobs.ps1 -Archive <jobs-private-portable-v0.7.0.zip 的完整路径>`，然后重启 `npm start`。在“模拟访谈”中选择“乔布斯 · Jobs（历史人物模拟）”。已有同版本资料不会覆盖。私有资料保存在忽略的 `data/jobs/0.7.0/`；可通过 `PARABLE_JOBS_DIR` 更换资料根目录。
+
+Jobs 默认表达方法位于 `jobs-style.mjs`（`0.7.0-style.1`），在 Agent 设置的 Skills 中可以编辑。未自定义的旧默认方法在新访谈配置中升级，自定义内容与已有快照保留。每轮额外读取真实访谈片段作语气参照；表达调整说明见 `docs/acceptance/jobs-expression.md`。
+
+每轮 Jobs 回答先调用模型选择至多三个主题，再由服务端读取主题所引用的原文段落，随后独立生成回答；这两次请求共享 180 秒预算。JSON 记录保存资料版本及本轮读取文件名，采访者只看到对话。没有复刻原包的交互式 `read_document`、`record_judgment` 工具，当前采用主题导航与引用段落预读取。模型生成质量需另行验收；模拟输出不代表乔布斯本人。线上适配使用服务端资料模块，原文不作为公开静态资源发布。
+
 ```powershell
 npm test
 ```
@@ -49,3 +57,7 @@ npm test
 测试使用临时数据库与本地模拟 API，覆盖真人与双 Agent 流程、私有人设隔离、配置快照、失败重试、重启恢复及记录导出。此测试不代表真实模型兼容性或访谈质量通过。
 
 需求见 [docs/requirements.md](docs/requirements.md)，参考资料见 [docs/reference/README.md](docs/reference/README.md)。
+
+精简采访者 v3 与线上定点续写对照：见 [运行与验证说明](docs/acceptance/slim-v3-evaluation.md)。命令：`python -u scripts/run-slim-evaluation.py`。
+
+本地提交、分支和资料边界见 [Git 管理约定](docs/git-workflow.md)。
